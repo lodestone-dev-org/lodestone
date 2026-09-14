@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Server Panel</title>
+</head>
+<body>
+    <header>
+        <h1>Minecraft Server Panel</h1>
+        <p>Logged in as: username</p>
+        <a href="/logout">Log out</a>
+    </header>
+
+    <main>
+        <section>
+            <h2>Server Controls</h2>
+
+            <p>Server status: <strong>Offline</strong></p>
+
+            <form action="/server/start" method="post">
+                <button type="submit">Start Server</button>
+            </form>
+
+            <form action="/server/stop" method="post">
+                <button type="submit">Stop Server</button>
+            </form>
+
+            <form action="/server/restart" method="post">
+                <button type="submit">Restart Server</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Server Information</h2>
+
+            <p>Server name: My Minecraft Server</p>
+            <p>IP address: example.com</p>
+            <p>Port: 25565</p>
+            <p>Players: 0 / 20</p>
+            <p>Version: Java Edition 1.21</p>
+        </section>
+
+        <section>
+            <h2>Server Console</h2>
+
+            <pre id="console"></pre>
+
+            <form action="/server/command" method="post">
+                <label for="command">Command</label>
+                <input type="text" id="command" name="command" required>
+                <button type="submit">Send Command</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Create a Server</h2>
+
+            <form action="/server/create" method="post">
+                <label for="server-name">Server name</label>
+                <input type="text" id="server-name" name="server_name" required>
+
+                <br><br>
+
+                <label for="minecraft-version">Minecraft version</label>
+                <select id="minecraft-version" name="minecraft_version">
+                    <option value="1.21">1.21</option>
+                    <option value="1.20.6">1.20.6</option>
+                    <option value="1.20.1">1.20.1</option>
+                </select>
+
+                <br><br>
+
+                <button type="submit">Create Server</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
