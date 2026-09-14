@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Files</title>
+</head>
+<body>
+    <header>
+        <h1>Server Files</h1>
+        <a href="/server_console.html">Back to Panel</a>
+    </header>
+
+    <main>
+        <label for="server">Server</label>
+        <select id="server">
+            <option value="1">My Minecraft Server</option>
+        </select>
+
+        <p id="path">/</p>
+
+        <button id="up">Go Up</button>
+        <button id="new-folder">New Folder</button>
+
+        <form id="upload-form">
+            <input type="file" id="file" required>
+            <button type="submit">Upload</button>
+        </form>
+
+        <ul id="files"></ul>
+
+        <section hidden id="editor">
+            <h2 id="editing-file"></h2>
+
+            <textarea id="content" rows="25" cols="100"></textarea>
+            <br>
+
+            <button id="save">Save</button>
+            <button id="close-editor">Close</button>
+        </section>
+    </main>
+
+    <script>
+        const server = document.querySelector("#server");
+        const files = document.querySelector("#files");
+        const pathLabel = document.querySelector("#path");
+        const editor = document.querySelector("#editor");
+        const content = document.querySelector("#content");
+        const editingFile = document.querySelector("#editing-file");
+
+        let currentPath = "/";
+        let openFile = "";
+
+        function serverUrl(path = "") {
+            return `/api/servers/${server.value}/files?path=${encodeURIComponent(path)}`;
+        }
+
+        async function loadFiles() {
+            const response = await fetch(serverUrl(currentPath));
+
+            if (!response.ok) {
+                alert("Unable to load files.");
+                return;
+            }
+
+            const entries = await response.json();
+
+            pathLabel.textContent = currentPath;
+            files.replaceChildren();
+
+            for (const entry of entries) {
+                const item = document.createElement("li");
+                const open = document.createElement("button");
+
+                open.textContent = entry.type === "directory"
+                    ? `[Folder] ${entry.name}`
+                    : entry.name;
+
+                open.addEventListener("click", () => {
+                    const nextPath = `${currentPath}/${entry.name}`.replace("//", "/");
+
+                    if (entry.type === "directory") {
+                        currentPath = nextPath;
+                        loadFiles();
+                    } else {
+                        openFileEditor(nextPath);
+                    }
+                });
+
+                item.appendChild(open);
+
+                if (entry.type !== "directory") {
+                    const remove = document.createElement("button");
+                    remove.textContent = "Delete";
+                    remove.addEventListener("click", () => deleteFile(entry.name));
+                    item.appendChild(remove);
+                }
+
+                files.appendChild(item);
+            }
+        }
+
+        async function openFileEditor(path) {
+            const response = await fetch(
+                `/api/servers/${server.value}/file?path=${encodeURIComponent(path)}`
+            );
+
+            if (!response.ok) {
+                alert("Unable to open file.");
+                return;
+            }
+
+            const file = await response.json();
+
+            openFile = path;
+            editingFile.textContent = path;
+            content.value = file.content;
+            editor.hidden = false;
+        }
+
+        async function deleteFile(name) {
+            if (!confirm(`Delete ${name}?`)) {
+                return;
+            }
+
+            const path = `${currentPath}/${name}`.replace("//", "/");
+
+            await fetch(`/api/servers/${server.value}/file`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ path })
+            });
+
+            loadFiles();
+        }
+
+        document.querySelector("#save").addEventListener("click", async () => {
+            const response = await fetch(`/api/servers/${server.value}/file`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    path: openFile,
+                    content: content.value
+                })
+            });
+
+            if (response.ok) {
+                alert("File saved.");
+            } else {
+                alert("Unable to save file.");
+            }
+        });
+
+        document.querySelector("#close-editor").addEventListener("click", () => {
+            editor.hidden = true;
+            openFile = "";
+        });
+
+        document.querySelector("#up").addEventListener("click", () => {
+            if (currentPath === "/") {
+                return;
+            }
+
+            const parts = currentPath.split("/").filter(Boolean);
+            parts.pop();
+            currentPath = `/${parts.join("/")}` || "/";
+            loadFiles();
+        });
+
+        document.querySelector("#new-folder").addEventListener("click", async () => {
+            const name = prompt("Folder name:");
+
+            if (!name) {
+                return;
+            }
+
+            await fetch(`/api/servers/${server.value}/folder`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    path: `${currentPath}/${name}`.replace("//", "/")
+                })
+            });
+
+            loadFiles();
+        });
+
+        document.querySelector("#upload-form").addEventListener("submit", async event => {
+            event.preventDefault();
+
+            const file = document.querySelector("#file").files[0];
+            const formData = new FormData();
+
+            formData.append("file", file);
+            formData.append("path", currentPath);
+
+            await fetch(`/api/servers/${server.value}/upload`, {
+                method: "POST",
+                body: formData
+            });
+
+            event.target.reset();
+            loadFiles();
+        });
+
+        server.addEventListener("change", () => {
+            currentPath = "/";
+            loadFiles();
+        });
+
+        loadFiles();
+    </script>
+</body>
+</html>
