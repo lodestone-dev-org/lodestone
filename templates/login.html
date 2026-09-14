@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body id="Login">
+    <main>
+        <h1>Lodestone</h1>
+
+        {% for message in get_flashed_messages() %}
+            <p class="flash">{{ message }}</p>
+        {% endfor %}
+
+        <form action="{{ url_for('login') }}" method="post">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autofocus>
+
+            <br><br>
+
+            <button type="submit">Log in</button>
+        </form>
+    </main>
+</body>
+</html>
