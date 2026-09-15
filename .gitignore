@@ -6,4 +6,4 @@ __pycache__/
 *.pyc
 .venv/
 .DS_Store
-./opencode.json
+opencode.json
