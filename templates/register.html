@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Register</title>
 </head>
-<body id="Login">
+<body id="Register">
     <main>
         <h1>Lodestone</h1>
 
@@ -13,7 +13,7 @@
             <p class="flash">{{ message }}</p>
         {% endfor %}
 
-        <form action="{{ url_for('login') }}" method="post">
+        <form action="{{ url_for('register') }}" method="post">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" required autofocus>
 
@@ -24,10 +24,10 @@
 
             <br><br>
 
-            <button type="submit">Log in</button>
+            <button type="submit">Create account</button>
         </form>
 
-        <p>No account yet? <a href="{{ url_for('register') }}">Register</a></p>
+        <p>Already registered? <a href="{{ url_for('login') }}">Log in</a></p>
     </main>
 </body>
 </html>
