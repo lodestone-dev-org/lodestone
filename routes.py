@@ -10,7 +10,7 @@ from app import app, get_db
 def index():
     if not session.get('user_id'):
         return redirect(url_for('login'))
-    return render_template('index.html')
+    return render_template('server_console.html')
 
 
 @app.route('/register', methods=['GET', 'POST'])
