@@ -12,53 +12,73 @@
         <a href="{{ url_for('logout') }}">Log out</a>
     </header>
 
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
     <main>
+        {% for server in servers %}
         <section>
-            <h2>Server Controls</h2>
+            <h2>{{ server.name }}</h2>
 
-            <p>Server status: <strong>Offline</strong></p>
+            <p>
+                Status: <strong>{{ states[server.id] }}</strong> &middot;
+                {{ server.server_type|lower }} {{ server.version }} &middot;
+                port {{ server.port }} &middot; {{ server.memory }} heap
+            </p>
 
-            <form action="/server/start" method="post">
-                <button type="submit">Start Server</button>
+            <form action="{{ url_for('start_server', server_id=server.id) }}" method="post">
+                <button type="submit">Start</button>
             </form>
 
-            <form action="/server/stop" method="post">
-                <button type="submit">Stop Server</button>
+            <form action="{{ url_for('stop_server', server_id=server.id) }}" method="post">
+                <button type="submit">Stop</button>
             </form>
 
-            <form action="/server/restart" method="post">
-                <button type="submit">Restart Server</button>
+            <form action="{{ url_for('restart_server', server_id=server.id) }}" method="post">
+                <button type="submit">Restart</button>
+            </form>
+
+            <form action="{{ url_for('delete_server', server_id=server.id) }}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+
+            <h3>Console</h3>
+
+            <pre id="console-{{ server.id }}" data-logs="{{ url_for('server_logs', server_id=server.id) }}"></pre>
+
+            <form action="{{ url_for('server_command', server_id=server.id) }}" method="post">
+                <label for="command-{{ server.id }}">Command</label>
+                <input type="text" id="command-{{ server.id }}" name="command" required>
+                <button type="submit">Send</button>
             </form>
         </section>
-
-        <section>
-            <h2>Server Information</h2>
-
-            <p>Server name: My Minecraft Server</p>
-            <p>IP address: example.com</p>
-            <p>Port: 25565</p>
-            <p>Players: 0 / 20</p>
-            <p>Version: Java Edition 1.21</p>
-        </section>
-
-        <section>
-            <h2>Server Console</h2>
-
-            <pre id="console"></pre>
-
-            <form action="/server/command" method="post">
-                <label for="command">Command</label>
-                <input type="text" id="command" name="command" required>
-                <button type="submit">Send Command</button>
-            </form>
-        </section>
+        {% else %}
+        <p>No servers yet.</p>
+        {% endfor %}
 
         <section>
             <h2>Create a Server</h2>
 
-            <form action="/server/create" method="post">
+            <form action="{{ url_for('create_server') }}" method="post">
                 <label for="server-name">Server name</label>
                 <input type="text" id="server-name" name="server_name" required>
+
+                <br><br>
+
+                <label for="server-type">Server software</label>
+                <select id="server-type" name="server_type">
+                    <option value="PAPER">Paper</option>
+                    <option value="FABRIC">Fabric</option>
+                    <option value="NEOFORGE">NeoForge</option>
+                    <option value="VANILLA">Vanilla</option>
+                </select>
 
                 <br><br>
 
@@ -71,9 +91,35 @@
 
                 <br><br>
 
+                <label for="memory">Memory</label>
+                <select id="memory" name="memory">
+                    <option value="2G">2G</option>
+                    <option value="4G">4G</option>
+                    <option value="6G">6G</option>
+                    <option value="8G">8G</option>
+                </select>
+
+                <br><br>
+
                 <button type="submit">Create Server</button>
             </form>
         </section>
     </main>
+
+    <script>
+        // polling until the SSE endpoint lands
+        function refresh(pre) {
+            fetch(pre.dataset.logs)
+                .then(r => r.text())
+                .then(text => {
+                    pre.textContent = text;
+                    pre.scrollTop = pre.scrollHeight;
+                });
+        }
+
+        const consoles = document.querySelectorAll('pre[data-logs]');
+        consoles.forEach(refresh);
+        setInterval(() => consoles.forEach(refresh), 3000);
+    </script>
 </body>
 </html>
