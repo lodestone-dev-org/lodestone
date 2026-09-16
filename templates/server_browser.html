@@ -6,7 +6,10 @@
     <title>Server List</title>
 </head>
 <body>
-    <h1>Server List</h1>
+    <header>
+        <h1>Server List</h1>
+        <a href="{{ url_for('logout') }}">Log out</a>
+    </header>
 
     {% for server in servers %}
         <a class="server" href="{{ url_for('server_console', server_id=server.id) }}">
