@@ -134,9 +134,12 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/server/create', methods=['POST'])
+@app.route('/server/create', methods=['GET', 'POST'])
 @login_required
 def create_server():
+    if request.method == 'GET':
+        return render_template('server_create.html')
+
     name = request.form['server_name'].strip()
     version = request.form.get('minecraft_version', '1.21')
     server_type = request.form.get('server_type', 'PAPER')
