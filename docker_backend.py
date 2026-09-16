@@ -13,7 +13,7 @@ import docker
 from docker.errors import APIError, DockerException, NotFound
 from requests.exceptions import RequestException
 
-IMAGE = os.environ.get('LODESTONE_MC_IMAGE', 'itzg/minecraft-server:latest')
+IMAGE = os.environ.get('LODESTONE_MC_IMAGE')  # set this to pin one image for every server
 DATA_ROOT = os.environ.get('LODESTONE_DATA', os.path.abspath('servers'))
 LABEL = 'lodestone.server'
 
@@ -75,6 +75,33 @@ def heap_bytes(memory):
     return n * 1024 ** 3 if m.group(2) in 'Gg' else n * 1024 ** 2
 
 
+def java_tag(version):
+    """Pick the JDK the server actually wants.
+
+    itzg publishes a tag per JDK and :latest follows the newest one, which is
+    not a safe default: Paper 1.21 bundles a spark whose async-profiler
+    segfaults the JVM on Java 25, so the tag has to track the server version.
+    """
+    numbers = []
+    for part in version.split('.'):
+        if not part.isdigit():
+            break
+        numbers.append(int(part))
+    v = tuple(numbers)
+
+    if v >= (1, 20, 5):
+        return 'java21'
+    if v >= (1, 17):
+        return 'java17'
+    if v >= (1, 12):
+        return 'java11'
+    return 'java8'
+
+
+def image_for(version):
+    return IMAGE or f'itzg/minecraft-server:{java_tag(version)}'
+
+
 def create(server_id, version, port, rcon_password, server_type='PAPER', memory='2G'):
     existing = get_container(server_id)
     if existing is not None:
@@ -83,7 +110,7 @@ def create(server_id, version, port, rcon_password, server_type='PAPER', memory=
     limit = heap_bytes(memory) + HEAP_OVERHEAD_MB * 1024 ** 2
 
     return client().containers.run(
-        IMAGE,
+        image_for(version),
         name=container_name(server_id),
         detach=True,
         environment={
