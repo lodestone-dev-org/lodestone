@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server Files</title>
+    <title>Server List</title>
 </head>
 <body>
     <h1>Server List</h1>
-    <ul>
-        {% for server in servers %}
-            <li><a href="{{ url_for('server_files', server_id=server.id) }}">{{ server.name }}</a></li>
-        {% endfor %}
-    </ul>
+
+    {% for server in servers %}
+        <a class="server" href="{{ url_for('server_console', server_id=server.id) }}">
+            <h2>{{ server.name }}</h2>
+            <p>{{ server.server_type|lower }} {{ server.version }} &middot; {{ server.memory }}</p>
+        </a>
+    {% else %}
+        <p>No servers yet.</p>
+    {% endfor %}
 </body>
 </html>

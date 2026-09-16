@@ -66,6 +66,19 @@ def index():
     return render_template('server_browser.html', servers=servers, states=states)
 
 
+@app.route('/server/<int:server_id>/console')
+@login_required
+def server_console(server_id):
+    server = owned(server_id)
+    if server is None:
+        abort(404)
+
+    running = docker_backend.statuses()
+    state = 'unavailable' if running is None else running.get(server_id, 'missing')
+    return render_template('server_console.html',
+                           servers=[server], states={server['id']: state})
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
