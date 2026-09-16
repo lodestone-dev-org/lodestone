@@ -39,6 +39,21 @@ def init_db():
                 password_hash TEXT NOT NULL
             )
         ''')
+        # the container itself is the source of truth for run state, so this only
+        # holds what we need to build the container back up
+        db.execute('''
+            CREATE TABLE IF NOT EXISTS servers (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                owner_id INTEGER NOT NULL REFERENCES users(id),
+                name TEXT NOT NULL,
+                server_type TEXT NOT NULL DEFAULT 'PAPER',
+                version TEXT NOT NULL,
+                memory TEXT NOT NULL DEFAULT '2G',
+                port INTEGER NOT NULL UNIQUE,
+                rcon_password TEXT NOT NULL,
+                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
 
 
 init_db()
