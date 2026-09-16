@@ -63,7 +63,7 @@ def index():
     states = {s['id']: 'unavailable' if running is None
               else running.get(s['id'], 'missing')
               for s in servers}
-    return render_template('server_console.html', servers=servers, states=states)
+    return render_template('server_browser.html', servers=servers, states=states)
 
 
 @app.route('/register', methods=['GET', 'POST'])
