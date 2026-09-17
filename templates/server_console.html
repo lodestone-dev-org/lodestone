@@ -34,7 +34,9 @@
 
         <h3>Console</h3>
 
-        <pre id="console-{{ server.id }}" class="server-console bg-dark text-light p-3" data-logs="{{ url_for('server_logs', server_id=server.id) }}"></pre>
+        <pre id="console-{{ server.id }}" class="server-console bg-dark text-light p-3"
+             data-logs="{{ url_for('server_logs', server_id=server.id) }}"
+             data-state="{{ states[server.id] }}"></pre>
 
         <form action="{{ url_for('server_command', server_id=server.id) }}" method="post" class="d-flex gap-2">
             <label for="command-{{ server.id }}" class="visually-hidden">Command</label>
@@ -51,6 +53,14 @@
     <script>
         // polling until the SSE endpoint lands
         function refresh(pre) {
+            if (pre.dataset.state !== 'running') {
+                pre.textContent = pre.dataset.state === 'unavailable'
+                    ? 'Server offline: cannot reach Docker.'
+                    : 'Server offline.';
+                pre.scrollTop = 0;
+                return;
+            }
+
             fetch(pre.dataset.logs)
                 .then(r => r.text())
                 .then(text => {
