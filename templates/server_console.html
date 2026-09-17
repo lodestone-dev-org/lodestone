@@ -10,7 +10,8 @@
         <p>
             Status: <strong>{{ states[server.id] }}</strong> &middot;
             {{ server.server_type|lower }} {{ server.version }} &middot;
-            port {{ server.port }} &middot; {{ server.memory }} heap
+            port {{ server.port }} &middot; {{ server.memory }} heap &middot;
+            <a href="{{ url_for('server_files', server_id=server.id) }}">Files</a>
         </p>
 
         <div class="mb-3">
