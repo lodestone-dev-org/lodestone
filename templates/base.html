@@ -29,16 +29,16 @@
                 </li>
                 <li class="nav-item">
                     {% if current %}
-                        <a class="btn btn-outline-primary w-100" href="{{ url_for('server_files', server_id=current.id) }}">Files</a>
+                        <a class="btn btn-outline-primary w-100" href="{{ url_for('server_files', server_id=current.id) }}"><i class="bi bi-file-earmark-text"></i>Files</a>
                     {% else %}
                         <a class="btn btn-outline-primary w-100" href="#">Files</a>
                     {% endif %}
                 </li>
-                <li class="nav-item"><a class="btn btn-outline-primary w-100" href="#">Backups</a></li>
-                <li class="nav-item"><a class="btn btn-outline-primary w-100" href="#">Settings</a></li>
+                <li class="nav-item"><a class="btn btn-outline-primary w-100" href="#"><i class="bi bi-box-seam"></i>Backups</a></li>
+                <li class="nav-item"><a class="btn btn-outline-primary w-100" href="#"><i class="bi bi-gear-wide-connected"></i>Settings</a></li>
                 <li class="nav-item">
                     {% if current %}
-                        <a class="btn btn-outline-primary w-100" href="{{ url_for('server_players', server_id=current.id) }}">Players</a>
+                        <a class="btn btn-outline-primary w-100" href="{{ url_for('server_players', server_id=current.id) }}"><i class="bi bi-people-fill"></i>Players</a>
                     {% else %}
                         <a class="btn btn-outline-primary w-100" href="#">Players</a>
                     {% endif %}
@@ -47,7 +47,7 @@
 
             <div class="border-top pt-2 small text-muted">
                 <p class="mb-2">Logged in as {{ session.username }}</p>
-                <a href="{{ url_for('logout') }}" class="btn btn-danger w-100">Log out</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-danger w-100"><i class="bi bi-box-arrow-left"></i>Log out</a>
             </div>
         </nav>
 
