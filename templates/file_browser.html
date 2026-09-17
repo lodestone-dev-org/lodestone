@@ -42,11 +42,7 @@
         {% for entry in entries %}
             <li>
                 {% if entry.is_dir %}
-                <form>
-                    <button type="button" class="btn btn-danger">Danger</button>
                     <a href="{{ url_for('server_files', server_id=server.id, path=entry.path) }}">{{ entry.name }}/</a>
-                </form>
-                    
                 {% else %}
                     <a href="{{ url_for('edit_file', server_id=server.id, path=entry.path) }}">{{ entry.name }}</a>
                     <span class="size">{{ entry.size|filesizeformat }}</span>
@@ -55,7 +51,7 @@
                 <form class="delete" data-name="{{ entry.name }}"
                       action="{{ url_for('delete_file', server_id=server.id) }}" method="post">
                     <input type="hidden" name="path" value="{{ entry.path }}">
-                    <button type="submit">Delete</button>
+                    <button type="button" class="btn btn-danger">Delete</button>
                 </form>
             </li>
         {% else %}
