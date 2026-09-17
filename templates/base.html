@@ -22,7 +22,7 @@
                 <li class="nav-item"><a class="btn btn-outline-primary w-100" href="{{ url_for('index') }}"><i class="bi bi-card-list"></i> Servers</a></li>
                 <li class="nav-item">
                     {% if current %}
-                        <a class="btn btn-outline-primary w-100" href="{{ url_for('server_console', server_id=current.id) }}">Console</a>
+                        <a class="btn btn-outline-primary w-100" href="{{ url_for('server_console', server_id=current.id) }}"><i class="bi bi-terminal"></i> Console</a>
                     {% else %}
                         <a class="btn btn-outline-primary w-100" href="#">Console</a>
                     {% endif %}
