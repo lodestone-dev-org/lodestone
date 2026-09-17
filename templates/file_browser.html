@@ -27,7 +27,7 @@
             <input type="hidden" name="path" value="{{ path }}">
             <label for="folder-name">New folder</label>
             <input type="text" id="folder-name" name="name" required>
-            <button type="button" class="btn btn-outline-success">Create</button>
+            <button type="submit" class="btn btn-outline-success">Create</button>
         </form>
 
         <form action="{{ url_for('upload_file', server_id=server.id) }}" method="post"
@@ -35,7 +35,7 @@
             <input type="hidden" name="path" value="{{ path }}">
             <label for="upload">Upload</label>
             <input type="file" id="upload" name="file" required>
-            <button type="button" class="btn btn-outline-success">Uploading</button>
+            <button type="submit" class="btn btn-outline-success">Upload</button>
         </form>
 
         <ul class="files">
@@ -51,7 +51,7 @@
                 <form class="delete" data-name="{{ entry.name }}"
                       action="{{ url_for('delete_file', server_id=server.id) }}" method="post">
                     <input type="hidden" name="path" value="{{ entry.path }}">
-                    <button type="button" class="btn btn-danger">Delete</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </li>
         {% else %}
