@@ -10,8 +10,8 @@
 <body id="ServerBrowser">
     <h1>Server List</h1>
     <header>
-        <a href="{{ url_for('create_server') }}" class="btn btn-outline-primary">New Server</a>
-        <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Log out</a>
+        <a href="{{ url_for('create_server') }}" class="btn btn-outline-primary"><i class="bi bi-database-add"></i>New Server</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-danger"><i class="bi bi-box-arrow-left"></i>Log out</a>
     </header>
 
     {% for server in servers %}
