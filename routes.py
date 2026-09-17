@@ -7,6 +7,7 @@ from flask import (
     Response, abort, flash, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.utils import secure_filename
 
 import docker_backend
 from app import app, get_db
@@ -239,3 +240,142 @@ def delete_server(server_id):
     db.commit()
     flash(f"Removed {server['name']}. Its world files are still on disk.")
     return redirect(url_for('index'))
+
+
+def parent(path):
+    return '/' + '/'.join(path.strip('/').split('/')[:-1])
+
+
+def crumbs(path):
+    """Breadcrumb trail for a folder, root first."""
+    trail = [('server', '/')]
+    walked = ''
+    for part in path.strip('/').split('/'):
+        if part:
+            walked += '/' + part
+            trail.append((part, walked))
+    return trail
+
+
+def browse(server_id, path):
+    return redirect(url_for('server_files', server_id=server_id, path=path))
+
+
+@app.route('/server/<int:server_id>/files')
+@login_required
+def server_files(server_id):
+    server = owned(server_id)
+    if server is None:
+        abort(404)
+
+    path = request.args.get('path', '/')
+    try:
+        entries = docker_backend.listing(server_id, path)
+    except (ValueError, OSError):
+        abort(404)
+
+    return render_template('file_browser.html', server=server, path=path,
+                           crumbs=crumbs(path), entries=entries)
+
+
+@app.route('/server/<int:server_id>/files/edit')
+@login_required
+def edit_file(server_id):
+    server = owned(server_id)
+    if server is None:
+        abort(404)
+
+    path = request.args.get('path', '')
+    here = parent(path)
+    try:
+        content = docker_backend.read_text(server_id, path)
+    except UnicodeDecodeError:
+        flash(f'{path} is not a text file')
+        return browse(server_id, here)
+    except ValueError as e:
+        flash(str(e))
+        return browse(server_id, here)
+    except OSError:
+        abort(404)
+
+    return render_template('file_browser.html', server=server, path=here,
+                           crumbs=crumbs(here), editing=path, content=content)
+
+
+@app.route('/server/<int:server_id>/files/save', methods=['POST'])
+@login_required
+def save_file(server_id):
+    if owned(server_id) is None:
+        abort(404)
+
+    path = request.form['path']
+    try:
+        docker_backend.write_text(server_id, path, request.form['content'])
+    except (ValueError, OSError) as e:
+        flash(str(e))
+    else:
+        flash(f'Saved {path}')
+
+    return browse(server_id, parent(path))
+
+
+@app.route('/server/<int:server_id>/files/folder', methods=['POST'])
+@login_required
+def new_folder(server_id):
+    if owned(server_id) is None:
+        abort(404)
+
+    here = request.form['path']
+    name = secure_filename(request.form['name'])
+    if not name:
+        flash('That folder name has nothing usable in it')
+        return browse(server_id, here)
+
+    try:
+        docker_backend.make_folder(server_id, f'{here}/{name}')
+    except (ValueError, OSError) as e:
+        flash(str(e))
+    else:
+        flash(f'Created {name}')
+
+    return browse(server_id, here)
+
+
+@app.route('/server/<int:server_id>/files/upload', methods=['POST'])
+@login_required
+def upload_file(server_id):
+    if owned(server_id) is None:
+        abort(404)
+
+    here = request.form['path']
+    upload = request.files['file']
+    name = secure_filename(upload.filename or '')
+    if not name:
+        flash('That file name has nothing usable in it')
+        return browse(server_id, here)
+
+    try:
+        upload.save(docker_backend.resolve(server_id, f'{here}/{name}'))
+    except (ValueError, OSError) as e:
+        flash(str(e))
+    else:
+        flash(f'Uploaded {name}')
+
+    return browse(server_id, here)
+
+
+@app.route('/server/<int:server_id>/files/delete', methods=['POST'])
+@login_required
+def delete_file(server_id):
+    if owned(server_id) is None:
+        abort(404)
+
+    path = request.form['path']
+    try:
+        docker_backend.delete_path(server_id, path)
+    except (ValueError, OSError) as e:
+        flash(str(e))
+    else:
+        flash(f'Deleted {path}')
+
+    return browse(server_id, parent(path))
