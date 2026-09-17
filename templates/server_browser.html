@@ -9,8 +9,12 @@
 <body id="ServerBrowser">
     <h1>Server List</h1>
     <header>
-        <a href="{{ url_for('create_server') }}">New Server</a>
-        <a href="{{ url_for('logout') }}">Log out</a>
+        <form action="{{ url_for('create_server')}}" method="post" class="d-inline">
+            <button type="submit" class="btn btn-outline-primary">New Server</button>
+        </form>
+        <form action="{{ url_for('logout') }}" method="post" class="d-inline">
+            <button type="submit" class="btn btn-outline-secondary">Log out</button>
+        </form>
     </header>
 
     {% for server in servers %}
