@@ -7,6 +7,7 @@ server as environment variables and manage the container around it.
 
 import os
 import re
+import shutil
 import time
 
 import docker
@@ -20,6 +21,9 @@ LABEL = 'lodestone.server'
 # MEMORY sets the JVM heap, mem_limit caps the container. They are not the same
 # number: leave room for metaspace and the GC or the kernel kills the JVM.
 HEAP_OVERHEAD_MB = 768
+
+# a textarea is no place for a 200MB region file, and neither is the request
+MAX_EDIT_BYTES = 1024 * 1024
 
 # a cached client keeps working sockets, but a daemon that dies later surfaces
 # as a plain requests error rather than anything under DockerException
@@ -205,3 +209,76 @@ def remove(server_id):
     c = get_container(server_id)
     if c is not None:
         c.remove(force=True)
+
+
+def resolve(server_id, path):
+    """Turn a panel path into a real one inside the server's data directory.
+
+    Resolving before checking is the whole point: a world folder can hold
+    symlinks, and a prefix test on the unresolved path walks straight through
+    them and out of the server.
+    """
+    root = os.path.realpath(data_dir(server_id))
+    full = os.path.realpath(os.path.join(root, path.lstrip('/')))
+    if full != root and not full.startswith(root + os.sep):
+        raise ValueError('that path is outside the server directory')
+    return full
+
+
+def panel_path(server_id, full):
+    """The inverse, so links never carry the host layout out to the browser."""
+    root = os.path.realpath(data_dir(server_id))
+    if full == root:
+        return '/'
+    return '/' + os.path.relpath(full, root).replace(os.sep, '/')
+
+
+def listing(server_id, path='/'):
+    full = resolve(server_id, path)
+    entries = []
+    for name in os.listdir(full):
+        child = os.path.join(full, name)
+        is_dir = os.path.isdir(child)
+        entries.append({
+            'name': name,
+            'path': panel_path(server_id, child),
+            'is_dir': is_dir,
+            'size': None if is_dir else os.path.getsize(child),
+        })
+    entries.sort(key=lambda e: (not e['is_dir'], e['name'].lower()))
+    return entries
+
+
+def read_text(server_id, path):
+    full = resolve(server_id, path)
+    if os.path.getsize(full) > MAX_EDIT_BYTES:
+        raise ValueError(f'{path} is too big to edit in the browser')
+
+    with open(full, 'rb') as f:
+        raw = f.read()
+    # jars, region files and player data all live in here. A NUL byte is the
+    # cheap tell for those; the ones that slip past it fail to decode instead,
+    # and either way the point is not to round-trip a binary through a textarea.
+    if b'\x00' in raw:
+        raise ValueError(f'{path} is not a text file')
+    return raw.decode('utf-8')
+
+
+def write_text(server_id, path, text):
+    full = resolve(server_id, path)
+    with open(full, 'w', encoding='utf-8', newline='\n') as f:
+        f.write(text.replace('\r\n', '\n'))
+
+
+def make_folder(server_id, path):
+    os.makedirs(resolve(server_id, path), exist_ok=True)
+
+
+def delete_path(server_id, path):
+    full = resolve(server_id, path)
+    if full == os.path.realpath(data_dir(server_id)):
+        raise ValueError('the server directory itself cannot be deleted here')
+    if os.path.isdir(full):
+        shutil.rmtree(full)
+    else:
+        os.remove(full)

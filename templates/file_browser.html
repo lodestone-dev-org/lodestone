@@ -1,220 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server Files</title>
-</head>
-<body>
-    <header>
-        <h1>Server Files</h1>
-        <a href="/server_console.html">Back to Panel</a>
-    </header>
+{% extends "base.html" %}
 
-    <main>
-        <label for="server">Server</label>
-        <select id="server">
-            <option value="1">My Minecraft Server</option>
-        </select>
+{% block title %}{{ server.name }} files{% endblock %}
 
-        <p id="path">/</p>
+{% block content %}
+    <h1>{{ server.name }} files</h1>
 
-        <button id="up">Go Up</button>
-        <button id="new-folder">New Folder</button>
+    <p class="crumbs">
+        {% for name, crumb in crumbs %}
+            <a href="{{ url_for('server_files', server_id=server.id, path=crumb) }}">{{ name }}</a>
+            {%- if not loop.last %} / {% endif %}
+        {% endfor %}
+    </p>
 
-        <form id="upload-form">
-            <input type="file" id="file" required>
-            <button type="submit">Upload</button>
+    {% if editing %}
+        <h2>{{ editing }}</h2>
+
+        <form action="{{ url_for('save_file', server_id=server.id) }}" method="post">
+            <input type="hidden" name="path" value="{{ editing }}">
+            <textarea name="content" rows="30" cols="100" spellcheck="false">{{ content }}</textarea>
+            <br>
+            <button type="submit" class="btn btn-outline-success">Save</button>
+            <a href="{{ url_for('server_files', server_id=server.id, path=path) }}">Cancel</a>
+        </form>
+    {% else %}
+        <form action="{{ url_for('new_folder', server_id=server.id) }}" method="post">
+            <input type="hidden" name="path" value="{{ path }}">
+            <label for="folder-name">New folder</label>
+            <input type="text" id="folder-name" name="name" required>
+            <button type="submit" class="btn btn-outline-success">Create</button>
         </form>
 
-        <ul id="files"></ul>
+        <form action="{{ url_for('upload_file', server_id=server.id) }}" method="post"
+              enctype="multipart/form-data">
+            <input type="hidden" name="path" value="{{ path }}">
+            <label for="upload">Upload</label>
+            <input type="file" id="upload" name="file" required>
+            <button type="submit" class="btn btn-outline-success">Upload</button>
+        </form>
 
-        <section hidden id="editor">
-            <h2 id="editing-file"></h2>
+        <ul class="files">
+        {% for entry in entries %}
+            <li>
+                {% if entry.is_dir %}
+                    <a href="{{ url_for('server_files', server_id=server.id, path=entry.path) }}">{{ entry.name }}/</a>
+                {% else %}
+                    <a href="{{ url_for('edit_file', server_id=server.id, path=entry.path) }}">{{ entry.name }}</a>
+                    <span class="size">{{ entry.size|filesizeformat }}</span>
+                {% endif %}
 
-            <textarea id="content" rows="25" cols="100"></textarea>
-            <br>
+                <form class="delete" data-name="{{ entry.name }}"
+                      action="{{ url_for('delete_file', server_id=server.id) }}" method="post">
+                    <input type="hidden" name="path" value="{{ entry.path }}">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </li>
+        {% else %}
+            <li>Nothing here yet. The server writes its files on first start.</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
 
-            <button id="save">Save</button>
-            <button id="close-editor">Close</button>
-        </section>
-    </main>
-
+{% block scripts %}
     <script>
-        const server = document.querySelector("#server");
-        const files = document.querySelector("#files");
-        const pathLabel = document.querySelector("#path");
-        const editor = document.querySelector("#editor");
-        const content = document.querySelector("#content");
-        const editingFile = document.querySelector("#editing-file");
-
-        let currentPath = "/";
-        let openFile = "";
-
-        function serverUrl(path = "") {
-            return `/api/servers/${server.value}/files?path=${encodeURIComponent(path)}`;
-        }
-
-        async function loadFiles() {
-            const response = await fetch(serverUrl(currentPath));
-
-            if (!response.ok) {
-                alert("Unable to load files.");
-                return;
-            }
-
-            const entries = await response.json();
-
-            pathLabel.textContent = currentPath;
-            files.replaceChildren();
-
-            for (const entry of entries) {
-                const item = document.createElement("li");
-                const open = document.createElement("button");
-
-                open.textContent = entry.type === "directory"
-                    ? `[Folder] ${entry.name}`
-                    : entry.name;
-
-                open.addEventListener("click", () => {
-                    const nextPath = `${currentPath}/${entry.name}`.replace("//", "/");
-
-                    if (entry.type === "directory") {
-                        currentPath = nextPath;
-                        loadFiles();
-                    } else {
-                        openFileEditor(nextPath);
-                    }
-                });
-
-                item.appendChild(open);
-
-                if (entry.type !== "directory") {
-                    const remove = document.createElement("button");
-                    remove.textContent = "Delete";
-                    remove.addEventListener("click", () => deleteFile(entry.name));
-                    item.appendChild(remove);
+        document.querySelectorAll('form.delete').forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!confirm(`Delete ${form.dataset.name}?`)) {
+                    event.preventDefault();
                 }
-
-                files.appendChild(item);
-            }
-        }
-
-        async function openFileEditor(path) {
-            const response = await fetch(
-                `/api/servers/${server.value}/file?path=${encodeURIComponent(path)}`
-            );
-
-            if (!response.ok) {
-                alert("Unable to open file.");
-                return;
-            }
-
-            const file = await response.json();
-
-            openFile = path;
-            editingFile.textContent = path;
-            content.value = file.content;
-            editor.hidden = false;
-        }
-
-        async function deleteFile(name) {
-            if (!confirm(`Delete ${name}?`)) {
-                return;
-            }
-
-            const path = `${currentPath}/${name}`.replace("//", "/");
-
-            await fetch(`/api/servers/${server.value}/file`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ path })
             });
-
-            loadFiles();
-        }
-
-        document.querySelector("#save").addEventListener("click", async () => {
-            const response = await fetch(`/api/servers/${server.value}/file`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    path: openFile,
-                    content: content.value
-                })
-            });
-
-            if (response.ok) {
-                alert("File saved.");
-            } else {
-                alert("Unable to save file.");
-            }
         });
-
-        document.querySelector("#close-editor").addEventListener("click", () => {
-            editor.hidden = true;
-            openFile = "";
-        });
-
-        document.querySelector("#up").addEventListener("click", () => {
-            if (currentPath === "/") {
-                return;
-            }
-
-            const parts = currentPath.split("/").filter(Boolean);
-            parts.pop();
-            currentPath = `/${parts.join("/")}` || "/";
-            loadFiles();
-        });
-
-        document.querySelector("#new-folder").addEventListener("click", async () => {
-            const name = prompt("Folder name:");
-
-            if (!name) {
-                return;
-            }
-
-            await fetch(`/api/servers/${server.value}/folder`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    path: `${currentPath}/${name}`.replace("//", "/")
-                })
-            });
-
-            loadFiles();
-        });
-
-        document.querySelector("#upload-form").addEventListener("submit", async event => {
-            event.preventDefault();
-
-            const file = document.querySelector("#file").files[0];
-            const formData = new FormData();
-
-            formData.append("file", file);
-            formData.append("path", currentPath);
-
-            await fetch(`/api/servers/${server.value}/upload`, {
-                method: "POST",
-                body: formData
-            });
-
-            event.target.reset();
-            loadFiles();
-        });
-
-        server.addEventListener("change", () => {
-            currentPath = "/";
-            loadFiles();
-        });
-
-        loadFiles();
     </script>
-</body>
-</html>
+{% endblock %}

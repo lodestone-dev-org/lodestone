@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body id="ServerBrowser">
+    <h1>Server List</h1>
+    <header>
+        <a href="{{ url_for('create_server') }}" class="btn btn-outline-primary">New Server</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Log out</a>
+    </header>
+
+    {% for server in servers %}
+        <a class="server" href="{{ url_for('server_console', server_id=server.id) }}">
+            <h2>{{ server.name }}</h2>
+            <p>{{ server.server_type|lower }} {{ server.version }} &middot; {{ server.memory }}</p>
+        </a>
+    {% else %}
+        <p>No servers yet.</p>
+    {% endfor %}
+</body>
+</html>

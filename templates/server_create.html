@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Create a Server{% endblock %}
+
+{% block content %}
+    <h1>Create a Server</h1>
+
+    <form action="{{ url_for('create_server') }}" method="post">
+        <label for="server-name">Server name</label>
+        <input type="text" id="server-name" name="server_name" required>
+
+        <br><br>
+
+        <label for="server-type">Server software</label>
+        <select id="server-type" name="server_type">
+            <option value="PAPER">Paper</option>
+            <option value="FABRIC">Fabric</option>
+            <option value="NEOFORGE">NeoForge</option>
+            <option value="VANILLA">Vanilla</option>
+        </select>
+
+        <br><br>
+
+        <label for="minecraft-version">Minecraft version</label>
+        <select id="minecraft-version" name="minecraft_version">
+            <option value="1.21">1.21</option>
+            <option value="1.20.6">1.20.6</option>
+            <option value="1.20.1">1.20.1</option>
+        </select>
+
+        <br><br>
+
+        <label for="memory">Memory</label>
+        <select id="memory" name="memory">
+            <option value="2G">2G</option>
+            <option value="4G">4G</option>
+            <option value="6G">6G</option>
+            <option value="8G">8G</option>
+        </select>
+
+        <br><br>
+
+        <button type="submit">Create Server</button>
+    </form>
+{% endblock %}
