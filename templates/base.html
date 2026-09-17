@@ -17,36 +17,36 @@
         <nav class="panel-sidebar d-flex flex-column flex-shrink-0 p-3 bg-light border-end">
             <h1 class="h4 mb-3"><a href="{{ url_for('index') }}" class="text-decoration-none text-dark">Lodestone</a></h1>
 
-            <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Servers</a></li>
+            <ul class="nav flex-column gap-2 mb-auto">
+                <li class="nav-item"><a class="btn btn-outline-primary w-100" href="{{ url_for('index') }}">Servers</a></li>
                 <li class="nav-item">
                     {% if current %}
-                        <a class="nav-link" href="{{ url_for('server_console', server_id=current.id) }}">Console</a>
+                        <a class="btn btn-outline-primary w-100" href="{{ url_for('server_console', server_id=current.id) }}">Console</a>
                     {% else %}
-                        <a class="nav-link" href="#">Console</a>
+                        <a class="btn btn-outline-primary w-100" href="#">Console</a>
                     {% endif %}
                 </li>
                 <li class="nav-item">
                     {% if current %}
-                        <a class="nav-link" href="{{ url_for('server_files', server_id=current.id) }}">Files</a>
+                        <a class="btn btn-outline-primary w-100" href="{{ url_for('server_files', server_id=current.id) }}">Files</a>
                     {% else %}
-                        <a class="nav-link" href="#">Files</a>
+                        <a class="btn btn-outline-primary w-100" href="#">Files</a>
                     {% endif %}
                 </li>
-                <li class="nav-item"><a class="nav-link" href="#">Backups</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+                <li class="nav-item"><a class="btn btn-outline-primary w-100" href="#">Backups</a></li>
+                <li class="nav-item"><a class="btn btn-outline-primary w-100" href="#">Settings</a></li>
                 <li class="nav-item">
                     {% if current %}
-                        <a class="nav-link" href="{{ url_for('server_players', server_id=current.id) }}">Players</a>
+                        <a class="btn btn-outline-primary w-100" href="{{ url_for('server_players', server_id=current.id) }}">Players</a>
                     {% else %}
-                        <a class="nav-link" href="#">Players</a>
+                        <a class="btn btn-outline-primary w-100" href="#">Players</a>
                     {% endif %}
                 </li>
             </ul>
 
             <div class="border-top pt-2 small text-muted">
-                <p class="mb-1">Logged in as {{ session.username }}</p>
-                <a href="{{ url_for('logout') }}" class="text-decoration-none">Log out</a>
+                <p class="mb-2">Logged in as {{ session.username }}</p>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-danger w-100">Log out</a>
             </div>
         </nav>
 
