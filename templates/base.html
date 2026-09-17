@@ -21,6 +21,13 @@
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Servers</a></li>
                 <li class="nav-item">
                     {% if current %}
+                        <a class="nav-link" href="{{ url_for('server_console', server_id=current.id) }}">Console</a>
+                    {% else %}
+                        <a class="nav-link" href="#">Console</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    {% if current %}
                         <a class="nav-link" href="{{ url_for('server_files', server_id=current.id) }}">Files</a>
                     {% else %}
                         <a class="nav-link" href="#">Files</a>
