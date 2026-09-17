@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}{{ server.name }} players{% endblock %}
+
+{% block content %}
+    <h1>{{ server.name }}</h1>
+
+    {% if players %}
+        <h2>Players online: {{ players.count }} / {{ players.max }}</h2>
+
+        {% if players.names %}
+            <ul class="players">
+            {% for name in players.names %}
+                <li>{{ name }}</li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No players online right now.</p>
+        {% endif %}
+    {% else %}
+        <p>Server offline.</p>
+        {% if error %}
+            <p class="text-muted">{{ error }}</p>
+        {% endif %}
+    {% endif %}
+{% endblock %}

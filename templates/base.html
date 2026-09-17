@@ -35,7 +35,13 @@
                 </li>
                 <li class="nav-item"><a class="nav-link" href="#">Backups</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Players</a></li>
+                <li class="nav-item">
+                    {% if current %}
+                        <a class="nav-link" href="{{ url_for('server_players', server_id=current.id) }}">Players</a>
+                    {% else %}
+                        <a class="nav-link" href="#">Players</a>
+                    {% endif %}
+                </li>
             </ul>
 
             <div class="border-top pt-2 small text-muted">

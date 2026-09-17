@@ -1,4 +1,5 @@
 import functools
+import re
 import secrets
 import sqlite3
 
@@ -78,6 +79,32 @@ def server_console(server_id):
     state = 'unavailable' if running is None else running.get(server_id, 'missing')
     return render_template('server_console.html',
                            servers=[server], states={server['id']: state})
+
+
+def parse_players(text):
+    """Pull the count and names out of an rcon `list` reply."""
+    m = re.search(r'There are (\d+) of a max of (\d+) players online:?\s*(.*)$', text)
+    if not m:
+        raise RuntimeError(f'unexpected response: {text!r}')
+    names = [n for n in (m.group(3) or '').split(', ') if n]
+    return {'count': int(m.group(1)), 'max': int(m.group(2)), 'names': names}
+
+
+@app.route('/server/<int:server_id>/players')
+@login_required
+def server_players(server_id):
+    server = owned(server_id)
+    if server is None:
+        abort(404)
+
+    players = None
+    error = None
+    try:
+        players = parse_players(docker_backend.command(server_id, 'list'))
+    except (DockerException, LookupError, RuntimeError, ValueError) as e:
+        error = str(e)
+
+    return render_template('players.html', server=server, players=players, error=error)
 
 
 @app.route('/register', methods=['GET', 'POST'])
