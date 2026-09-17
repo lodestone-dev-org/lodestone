@@ -114,3 +114,13 @@
     align-items: center;
     margin-bottom: 1.5rem;
 }
+
+/* Panel layout */
+.panel-sidebar {
+    width: 220px;
+}
+
+.server-console {
+    height: 300px;
+    overflow-y: auto;
+}

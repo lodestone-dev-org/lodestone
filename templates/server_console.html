@@ -4,7 +4,7 @@
 
 {% block content %}
     {% for server in servers %}
-    <section>
+    <section class="mb-4">
         <h2>{{ server.name }}</h2>
 
         <p>
@@ -13,30 +13,32 @@
             port {{ server.port }} &middot; {{ server.memory }} heap
         </p>
 
-        <form action="{{ url_for('start_server', server_id=server.id) }}" method="post">
-            <button type="submit">Start</button>
-        </form>
+        <div class="mb-3">
+            <form action="{{ url_for('start_server', server_id=server.id) }}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-success btn-sm">Start</button>
+            </form>
 
-        <form action="{{ url_for('stop_server', server_id=server.id) }}" method="post">
-            <button type="submit">Stop</button>
-        </form>
+            <form action="{{ url_for('stop_server', server_id=server.id) }}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-danger btn-sm">Stop</button>
+            </form>
 
-        <form action="{{ url_for('restart_server', server_id=server.id) }}" method="post">
-            <button type="submit">Restart</button>
-        </form>
+            <form action="{{ url_for('restart_server', server_id=server.id) }}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-warning btn-sm">Restart</button>
+            </form>
 
-        <form action="{{ url_for('delete_server', server_id=server.id) }}" method="post">
-            <button type="submit">Delete</button>
-        </form>
+            <form action="{{ url_for('delete_server', server_id=server.id) }}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+            </form>
+        </div>
 
         <h3>Console</h3>
 
-        <pre id="console-{{ server.id }}" data-logs="{{ url_for('server_logs', server_id=server.id) }}"></pre>
+        <pre id="console-{{ server.id }}" class="server-console bg-dark text-light p-3" data-logs="{{ url_for('server_logs', server_id=server.id) }}"></pre>
 
-        <form action="{{ url_for('server_command', server_id=server.id) }}" method="post">
-            <label for="command-{{ server.id }}">Command</label>
-            <input type="text" id="command-{{ server.id }}" name="command" required>
-            <button type="submit">Send</button>
+        <form action="{{ url_for('server_command', server_id=server.id) }}" method="post" class="d-flex gap-2">
+            <label for="command-{{ server.id }}" class="visually-hidden">Command</label>
+            <input type="text" id="command-{{ server.id }}" name="command" class="form-control" required>
+            <button type="submit" class="btn btn-primary flex-shrink-0">Send</button>
         </form>
     </section>
     {% else %}

@@ -4,35 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Lodestone{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="app">
-        <aside class="sidebar">
-            <h1 class="brand"><a href="{{ url_for('index') }}">Lodestone</a></h1>
+    <div class="d-flex vh-100">
+        <nav class="panel-sidebar d-flex flex-column flex-shrink-0 p-3 bg-light border-end">
+            <h1 class="h4 mb-3"><a href="{{ url_for('index') }}" class="text-decoration-none text-dark">Lodestone</a></h1>
 
-            <nav>
-                <ul>
-                    <li><a href="{{ url_for('index') }}">Console</a></li>
-                    <li><a href="#files">Files</a></li>
-                    <li><a href="#backups">Backups</a></li>
-                    <li><a href="#settings">Settings</a></li>
-                    <li><a href="#players">Players</a></li>
-                </ul>
-            </nav>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Servers</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Files</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Backups</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Players</a></li>
+            </ul>
 
-            <p class="user">Logged in as: {{ session.username }}</p>
-            <a href="{{ url_for('logout') }}">Log out</a>
-        </aside>
+            <div class="border-top pt-2 small text-muted">
+                <p class="mb-1">Logged in as {{ session.username }}</p>
+                <a href="{{ url_for('logout') }}" class="text-decoration-none">Log out</a>
+            </div>
+        </nav>
 
-        <main class="content">
+        <main class="flex-grow-1 p-3 overflow-auto">
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
-                    <ul class="flashes">
+                    <div class="alert alert-danger">
                     {% for message in messages %}
-                        <li>{{ message }}</li>
+                        <div>{{ message }}</div>
                     {% endfor %}
-                    </ul>
+                    </div>
                 {% endif %}
             {% endwith %}
 
@@ -40,6 +41,7 @@
         </main>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     {% block scripts %}{% endblock %}
 </body>
 </html>
