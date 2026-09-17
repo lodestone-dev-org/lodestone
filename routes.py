@@ -52,7 +52,7 @@ def act(server_id, action, done):
         flash(str(e))
     else:
         flash(done)
-    return redirect(url_for('index'))
+    return redirect(url_for('server_console', server_id=server_id))
 
 
 @app.route('/')
@@ -235,7 +235,7 @@ def server_command(server_id):
         else:
             flash(reply or f'sent: {line}')
 
-    return redirect(url_for('index'))
+    return redirect(url_for('server_console', server_id=server_id))
 
 
 @app.route('/server/<int:server_id>/logs')
