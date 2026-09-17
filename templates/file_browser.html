@@ -42,7 +42,11 @@
         {% for entry in entries %}
             <li>
                 {% if entry.is_dir %}
+                <form>
+                    <button type="button" class="btn btn-danger">Danger</button>
                     <a href="{{ url_for('server_files', server_id=server.id, path=entry.path) }}">{{ entry.name }}/</a>
+                </form>
+                    
                 {% else %}
                     <a href="{{ url_for('edit_file', server_id=server.id, path=entry.path) }}">{{ entry.name }}</a>
                     <span class="size">{{ entry.size|filesizeformat }}</span>
