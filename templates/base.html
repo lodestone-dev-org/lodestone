@@ -22,25 +22,25 @@
                 <li class="nav-item"><a class="btn btn-outline-primary w-100" href="{{ url_for('index') }}"><i class="bi bi-card-list"></i> Servers</a></li>
                 <li class="nav-item">
                     {% if current %}
-                        <a class="btn btn-outline-primary w-100" href="{{ url_for('server_console', server_id=current.id) }}"><i class="bi bi-terminal"></i> Console</a>
+                        <a class="btn btn-outline-info w-100" href="{{ url_for('server_console', server_id=current.id) }}"><i class="bi bi-terminal"></i> Console</a>
                     {% else %}
-                        <a class="btn btn-outline-primary w-100" href="#">Console</a>
+                        <a class="btn btn-outline-info w-100" href="#">Console</a>
                     {% endif %}
                 </li>
                 <li class="nav-item">
                     {% if current %}
-                        <a class="btn btn-outline-primary w-100" href="{{ url_for('server_files', server_id=current.id) }}"><i class="bi bi-file-earmark-text"></i>Files</a>
+                        <a class="btn btn-outline-info w-100" href="{{ url_for('server_files', server_id=current.id) }}"><i class="bi bi-file-earmark-text"></i>Files</a>
                     {% else %}
-                        <a class="btn btn-outline-primary w-100" href="#">Files</a>
+                        <a class="btn btn-outline-info w-100" href="#">Files</a>
                     {% endif %}
                 </li>
-                <li class="nav-item"><a class="btn btn-outline-primary w-100" href="#"><i class="bi bi-box-seam"></i>Backups</a></li>
-                <li class="nav-item"><a class="btn btn-outline-primary w-100" href="#"><i class="bi bi-gear-wide-connected"></i>Settings</a></li>
+                <li class="nav-item"><a class="btn btn-outline-info w-100" href="#"><i class="bi bi-box-seam"></i>Backups</a></li>
+                <li class="nav-item"><a class="btn btn-outline-info w-100" href="#"><i class="bi bi-gear-wide-connected"></i>Settings</a></li>
                 <li class="nav-item">
                     {% if current %}
-                        <a class="btn btn-outline-primary w-100" href="{{ url_for('server_players', server_id=current.id) }}"><i class="bi bi-people-fill"></i>Players</a>
+                        <a class="btn btn btn-outline-info w-100" href="{{ url_for('server_players', server_id=current.id) }}"><i class="bi bi-people-fill"></i>Players</a>
                     {% else %}
-                        <a class="btn btn-outline-primary w-100" href="#">Players</a>
+                        <a class="btn btn-outline-info w-100" href="#">Players</a>
                     {% endif %}
                 </li>
             </ul>
