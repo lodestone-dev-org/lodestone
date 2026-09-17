@@ -11,7 +11,7 @@
             Status: <strong>{{ states[server.id] }}</strong> &middot;
             {{ server.server_type|lower }} {{ server.version }} &middot;
             port {{ server.port }} &middot; {{ server.memory }} heap &middot;
-            <a href="{{ url_for('server_files', server_id=server.id) }}">Files</a>
+            {{ server.players }} players
         </p>
 
         <div class="mb-3">
