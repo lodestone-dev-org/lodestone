@@ -8,13 +8,24 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    {% set current = server|default(none) %}
+    {% if not current and servers|default([])|length == 1 %}
+        {% set current = servers[0] %}
+    {% endif %}
+
     <div class="d-flex vh-100">
         <nav class="panel-sidebar d-flex flex-column flex-shrink-0 p-3 bg-light border-end">
             <h1 class="h4 mb-3"><a href="{{ url_for('index') }}" class="text-decoration-none text-dark">Lodestone</a></h1>
 
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Servers</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Files</a></li>
+                <li class="nav-item">
+                    {% if current %}
+                        <a class="nav-link" href="{{ url_for('server_files', server_id=current.id) }}">Files</a>
+                    {% else %}
+                        <a class="nav-link" href="#">Files</a>
+                    {% endif %}
+                </li>
                 <li class="nav-item"><a class="nav-link" href="#">Backups</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Players</a></li>
