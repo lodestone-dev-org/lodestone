@@ -17,17 +17,17 @@ Third Space is a themed website and server-preview experience. Core identity sta
 
 ## 3. Site Structure
 
-```text
+text
 Home (Weekly Theme, GitHub, Download, Server Preview)
 Server Preview
-Themes (Current + Archive)
+Themes
 Team
 Accessibility
-```
+
 
 ## 4. Homepage
 
-Immediately shows: branding, current theme, short description, animated primary CTA (Enter Server), GitHub button, Download button, Server Preview button.
+Immediately shows: branding, current theme, short description, GitHub button, Download button, Server Preview button.
 
 Buttons need hover/focus/active states, keyboard support, and a reduced-motion alternative.
 
@@ -35,47 +35,30 @@ Buttons need hover/focus/active states, keyboard support, and a reduced-motion a
 
 Demonstrates the server's front end without requiring full server access — nav, dashboard, server status, user profile, content cards, notifications, settings. Clearly label it as demonstration-only.
 
-## 6. Theme System
-
-Themes must be modular — no hardcoded colors. Use shared CSS variables:
-
-```css
-:root {
-  --theme-background: ...;
-  --theme-surface: ...;
-  --theme-primary: ...;
-  --theme-secondary: ...;
-  --theme-accent: ...;
-  --theme-text: ...;
-  --theme-muted: ...;
-  --theme-border: ...;
-}
-```
-
 Each theme controls background, colors, typography, buttons, cards, borders, shadows, decorations, animations, and server-preview styling. Layout/identity stays consistent.
 
 ### Current theme — Harvest
 
 Warm autumn/harvest concept (leaves, grain, organic shapes, warm lighting). Gentle floating/particle animation, subtle transitions — must not hurt readability.
 
-## 7. Theme Page
+## 6. Theme Page
 
 Current theme: name, week/date, description, preview, palette, inspiration, UI examples.
 Archive: each past theme keeps a screenshot, description, date, palette, notes.
 
-## 8. Team Page
+## 7. Team Page
 
 Per member: name, role, avatar, short bio, links, contributions. Uses the current weekly theme.
 
-## 9. Accessibility
+## 8. Accessibility
 
-* **Reduced motion** — toggle to disable transitions/parallax/decorations; respect `prefers-reduced-motion`.
-* **High contrast** — readable text, visible controls/focus states, no color-only info.
-* **Font size** — Normal / Large / Extra Large.
-* **Keyboard** — full navigation, logical tab order, visible focus.
-* **Screen readers** — semantic HTML (`header`, `nav`, `main`, `section`, `article`, `footer`), meaningful labels/alt text.
+**Reduced motion** — toggle to disable transitions/parallax/decorations; respect prefers-reduced-motion`.
+**High contrast** — readable text, visible controls/focus states, no color-only info.
+**Font size** — Normal / Large / Extra Large.
+**Keyboard** — full navigation, logical tab order, visible focus.
+**Screen readers** — semantic HTML (`header`, `nav`, `main`, `section`, `article`, `footer`), meaningful labels/alt text.
 
-## 10. Responsive & Performance
+## 9. Responsive & Performance
 
 Support desktop/laptop/tablet/mobile. Mobile priority order: branding → theme → main message → Enter Server → GitHub → Download → navigation. Reduce animation on smaller devices.
 
@@ -83,7 +66,7 @@ Keep it lightweight: compressed/modern-format images, lazy-load non-critical ass
 
 
 
-```json
+json
 {
   "name": "Harvest",
   "week": "01",
@@ -104,7 +87,7 @@ Keep it lightweight: compressed/modern-format images, lazy-load non-critical ass
 5. Publish to GitHub.
 6. Archive the previous theme.
 
-## 12. Definition of Done
+12. Definition of Done
 
 Homepage + Harvest theme implemented
 *Theme system + archive structure implemented
