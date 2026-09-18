@@ -15,13 +15,24 @@
         <a href="{{ url_for('logout') }}" class="btn btn-outline-danger"><i class="bi bi-box-arrow-left"></i>Log out</a>
     </header>
 
+    <main class="servers">
     {% for server in servers %}
+        {% set s = states[server.id] %}
         <a class="server" href="{{ url_for('server_console', server_id=server.id) }}">
             <h2>{{ server.name }}</h2>
-            <p>{{ server.server_type|lower }} {{ server.version }} &middot; {{ server.memory }}</p>
+            <p class="state {{ 'up' if s.state == 'running' else 'down' }}">
+                {{ s.state }}{% if s.uptime %} <span class="uptime">{{ s.uptime }}</span>{% endif %}
+            </p>
+            <dl>
+                <dt>Type</dt><dd>{{ server.server_type|lower }} {{ server.version }}</dd>
+                <dt>Memory</dt><dd>{{ server.memory }}</dd>
+                <dt>Port</dt><dd>{{ server.port }}</dd>
+                <dt>Created</dt><dd>{{ server.created_at[:10] }}</dd>
+            </dl>
         </a>
     {% else %}
         <p>No servers yet.</p>
     {% endfor %}
+    </main>
 </body>
 </html>

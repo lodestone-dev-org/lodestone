@@ -68,7 +68,9 @@ def statuses():
         found = client().containers.list(all=True, filters={'label': LABEL})
     except UNREACHABLE:
         return None
-    return {int(c.labels[LABEL]): c.status for c in found}
+    return {int(c.labels[LABEL]): {'state': c.status,
+                                   'uptime': c.attrs.get('Status')}
+            for c in found}
 
 
 def heap_bytes(memory):

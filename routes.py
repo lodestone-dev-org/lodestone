@@ -55,6 +55,12 @@ def act(server_id, action, done):
     return redirect(url_for('server_console', server_id=server_id))
 
 
+def run_state(running, server_id):
+    if running is None:
+        return {'state': 'unavailable', 'uptime': None}
+    return running.get(server_id, {'state': 'missing', 'uptime': None})
+
+
 @app.route('/')
 @login_required
 def index():
@@ -62,9 +68,7 @@ def index():
         'SELECT * FROM servers WHERE owner_id = ? ORDER BY id', (session['user_id'],)
     ).fetchall()
     running = docker_backend.statuses()
-    states = {s['id']: 'unavailable' if running is None
-              else running.get(s['id'], 'missing')
-              for s in servers}
+    states = {s['id']: run_state(running, s['id']) for s in servers}
     return render_template('server_browser.html', servers=servers, states=states)
 
 
@@ -76,7 +80,7 @@ def server_console(server_id):
         abort(404)
 
     running = docker_backend.statuses()
-    state = 'unavailable' if running is None else running.get(server_id, 'missing')
+    state = run_state(running, server_id)['state']
     return render_template('server_console.html',
                            servers=[server], states={server['id']: state})
 
