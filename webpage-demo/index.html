@@ -164,3 +164,81 @@
       </article>
     </div>
   </section>
+  <section id="theme" aria-labelledby="theme-title">
+    <p class="wp"><b>Waypoint 03</b> The theme, in order</p>
+    <div class="head">
+      <h2 id="theme-title" class="reveal">Haunted Harvest</h2>
+      <p class="note reveal">A spooky theme for week 01</p>
+    </div>
+    <div class="about-grid">
+      <p class="lead-line reveal">A theme for the first week of the project, with a few surprises.</p>
+      <div class="prose reveal">
+        <p>The first week of Lodestone is a Halloween theme, with a few surprises hidden in the code. The compass spins, leaves fall, and the background is haunted. Check the source code for more.</p>
+        <p>There are also some accessibility features: a high contrast mode, a motion reduction mode, and a font size adjustment. These can be toggled in the accessibility dialog.</p>
+      </div>
+    </div>
+    <p class="wp"><b>Waypoint 04</b>Palette: the nine colours used:</p>
+    <div class="swatches">
+      <div class="sw"><i style="background:#120F0D"></i><span><b>Midnight soil</b>#120F0D</span></div>
+      <div class="sw"><i style="background:#211714"></i><span><b>Charred brown</b>#211714</span></div>
+      <div class="sw"><i style="background:#3A241D"></i><span><b>Dark wood</b>#3A241D</span></div>
+      <div class="sw"><i style="background:#6E3026"></i><span><b>Dark rust</b>#6E3026</span></div>
+      <div class="sw"><i style="background:#B85C27"></i><span><b>Pumpkin orange</b>#B85C27</span></div>
+      <div class="sw"><i style="background:#D58A35"></i><span><b>Lantern gold</b>#D58A35</span></div>
+      <div class="sw"><i style="background:#D6C19A"></i><span><b>Old parchment</b>#D6C19A</span></div>
+      <div class="sw"><i style="background:#4B523B"></i><span><b>Dead moss</b>#4B523B</span></div>
+      <div class="sw"><i style="background:#6E6570"></i><span><b>Ghostly purple-gray</b>#6E6570</span></div>
+    </div>
+  </section>
+
+</div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p class="copyright">&copy; 2024 Lodestone. All rights reserved.</p>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="#top">Back to top</a>
+      <a href="#about">About</a>
+      <a href="#features">Features</a>
+      <a href="#theme">Theme</a>
+    </nav>
+  </div>
+</footer>
+
+<dialog class="a11y" id="a11y" aria-labelledby="a11y-title" aria-describedby="a11y-desc">
+  <div class="wrap">
+    <h2 id="a11y-title">Accessibility</h2>
+    <p id="a11y-desc">Adjust the settings below to improve your experience.</p>
+    <form method="dialog">
+      <fieldset>
+        <legend>Motion</legend>
+        <label><input type="radio" name="motion" value="auto" checked> Auto</label>
+        <label><input type="radio" name="motion" value="reduce"> Reduce</label>
+        <label><input type="radio" name="motion" value="none"> None</label>
+      </fieldset>
+      <fieldset>
+        <legend>Contrast</legend>
+        <label><input type="radio" name="contrast" value="normal" checked> Normal</label>
+        <label><input type="radio" name="contrast" value="high"> High</label>
+      </fieldset>
+      <fieldset>
+        <legend>Font size</legend>
+        <label><input type="radio" name="font" value="normal" checked> Normal</label>
+        <label><input type="radio" name="font" value="large"> Large</label>
+      </fieldset>
+      <fieldset>
+        <legend>Decoration</legend>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="decor" value="off"><span>Hide leaves and grain</span></label>
+        </div>
+        <p class="hint">Your choices are kept on this device.</p>
+      </fieldset>
+      <div class="a11y-foot">
+        <button class="btn" type="button" id="a11yReset"><span>Reset</span></button>
+        <button class="btn primary" value="close"><span>Done</span></button>
+      </div>
+    </form>
+  </div>
+</dialog>
+</body>
+</html>
