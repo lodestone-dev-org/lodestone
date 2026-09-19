@@ -36,8 +36,8 @@
                         <a class="btn btn-outline-info w-100" href="#">Files</a>
                     {% endif %}
                 </li>
-                <li class="nav-item"><a class="btn btn-outline-info w-100" href="#"><i class="bi bi-box-seam"></i>Backups</a></li>
-                <li class="nav-item"><a class="btn btn-outline-info w-100" href="#"><i class="bi bi-gear-wide-connected"></i>Settings</a></li>
+                <li class="nav-item"><a class="btn btn-outline-info w-100" href="{{ url_for('server_backups', server_id=current.id) }}"><i class="bi bi-box-seam"></i>Backups</a></li>
+                <li class="nav-item"><a class="btn btn-outline-info w-100" href="{{ url_for('server_settings', server_id=current.id) }}"><i class="bi bi-gear-wide-connected"></i>Settings</a></li>
                 <li class="nav-item">
                     {% if current %}
                         <a class="btn btn btn-outline-info w-100" href="{{ url_for('server_players', server_id=current.id) }}"><i class="bi bi-people-fill"></i>Players</a>

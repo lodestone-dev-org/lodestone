@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}{{ server.name }} Backups{% endblock %}
+
+{% block content %}
+    <h1>{{ server.name }} Backups</h1>
+
+    <ul class="backups">
+    {% for backup in backups %}
+        <li>
+            <a href="{{ url_for('download_backup', server_id=server.id, backup_id=backup.id) }}">{{ backup.name }}</a>
+            <span class="size">{{ backup.size|filesizeformat }}</span>
+            <span class="date">{{ backup.created_at }}</span>
+
+            <form class="delete" data-name="{{ backup.name }}"
+                  action="{{ url_for('delete_backup', server_id=server.id) }}" method="post">
+                <input type="hidden" name="backup_id" value="{{ backup.id }}">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </li>
+    {% else %}
+        <li>No backups yet.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}
