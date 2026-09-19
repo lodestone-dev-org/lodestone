@@ -97,6 +97,11 @@ body {
     font-size: 0.9rem;
 }
 
+#login a {
+    color: inherit;
+    text-decoration: underline;
+}
+
 /* Server browser styles */
 #ServerBrowser {
     margin: 0;
