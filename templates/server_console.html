@@ -31,8 +31,9 @@
             </form>
         </div>
 
-        <h3>Console</h3>
+        
         <div class="console-box">
+        <h3>Console</h3>
         <pre id="console-{{ server.id }}" class="server-console bg-dark text-light p-3"
              data-logs="{{ url_for('server_logs', server_id=server.id) }}"
              data-state="{{ states[server.id] }}"></pre>
