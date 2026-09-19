@@ -166,6 +166,11 @@ body {
     transition: transform 0.15s ease;
 }
 
+#Register a {
+    color: inherit;
+    text-decoration: none;
+}
+
 /* Server browser styles */
 #ServerBrowser {
     margin: 0;
