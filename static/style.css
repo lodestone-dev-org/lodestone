@@ -151,6 +151,21 @@ body {
     transition: transform 0.15s ease;
 }
 
+#Register .login {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    margin-top: 0.5rem;
+    border: 1px solid currentColor;
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
 /* Server browser styles */
 #ServerBrowser {
     margin: 0;
