@@ -57,7 +57,7 @@
             if (pre.dataset.state !== 'running') {
                 pre.textContent = pre.dataset.state === 'unavailable'
                     ? 'Server offline: cannot reach Docker.'
-                    : 'Server offline.';
+                    : 'Server offline. start it to access the console.';
                 pre.scrollTop = 0;
                 return;
             }
