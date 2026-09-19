@@ -14,22 +14,22 @@
         {% for message in get_flashed_messages() %}
             <p class="flash">{{ message }}</p>
         {% endfor %}
-
-        <form action="{{ url_for('login') }}" method="post">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required autofocus>
-
-            <br><br>
-
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
-
-            <br><br>
-
-            <button type="submit">Log in</button>
-        </form>
-
-        <p>No account yet? <a href="{{ url_for('register') }}">Register</a></p>
+<form>
+  <div class="row mb-3">
+    <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+    <div class="col-sm-10">
+      <input type="email" class="form-control" id="inputEmail3">
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+    <div class="col-sm-10">
+      <input type="password" class="form-control" id="inputPassword3">
+    </div>
+  </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Sign in</button>
+</form>
     </main>
 </body>
 </html>
