@@ -411,7 +411,7 @@ def delete_file(server_id):
 
     return browse(server_id, parent(path))
 
-@app.route('/accountsettings', methods=['POST'])
+@app.route('/accountsettings')
 @login_required
 def accountsettings():
     return()
