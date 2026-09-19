@@ -188,6 +188,18 @@ body {
     text-decoration: none;
 }
 
+#Register input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid currentColor;
+    border-radius: 6px;
+    box-sizing: border-box;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: 1rem;
+}
 
 /* Server browser styles */
 #ServerBrowser {
