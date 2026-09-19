@@ -118,6 +118,16 @@ body {
 
 /* register page styles */
 
+#Register {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
 #Register main {
     width: 100%;
     max-width: 340px;
@@ -162,12 +172,6 @@ body {
     text-decoration: none;
 }
 
-#Register label {
-    display: block;
-    margin-bottom: 0.35rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
 
 /* Server browser styles */
 #ServerBrowser {
