@@ -15,7 +15,7 @@
             <p class="flash">{{ message }}</p>
         {% endfor %}
 
-        <form action="{{ url_for('settings') }}" method="post">
+        <form action="{{ url_for('accountsettings') }}" method="post">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" value="{{ current_user.username }}" required>
 
