@@ -411,7 +411,31 @@ def delete_file(server_id):
 
     return browse(server_id, parent(path))
 
-@app.route('/accountsettings')
+@app.route('/accountsettings', methods=['GET', 'POST'])
 @login_required
 def accountsettings():
-    return()
+    if request.method == 'POST':
+        username = request.form['username'].strip()
+        password = request.form['password']
+
+        if not username:
+            flash('Username is required')
+            return render_template('account_settings.html')
+
+        db = get_db()
+        try:
+            db.execute('UPDATE users SET username = ? WHERE id = ?',
+                       (username, session['user_id']))
+            if password:
+                db.execute('UPDATE users SET password_hash = ? WHERE id = ?',
+                           (generate_password_hash(password), session['user_id']))
+            db.commit()
+        except sqlite3.IntegrityError:
+            flash('Username already taken')
+            return render_template('account_settings.html')
+
+        session['username'] = username
+        flash('Settings updated')
+        return redirect(url_for('accountsettings'))
+
+    return render_template('account_settings.html')
