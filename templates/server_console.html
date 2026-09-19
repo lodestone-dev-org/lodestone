@@ -32,7 +32,7 @@
         </div>
 
         <h3>Console</h3>
-
+        <div class="console-box">
         <pre id="console-{{ server.id }}" class="server-console bg-dark text-light p-3"
              data-logs="{{ url_for('server_logs', server_id=server.id) }}"
              data-state="{{ states[server.id] }}"></pre>
@@ -41,6 +41,7 @@
             <label for="command-{{ server.id }}" class="visually-hidden">Command</label>
             <input type="text" id="command-{{ server.id }}" name="command" class="form-control" required>
             <button type="submit" class="btn btn-primary flex-shrink-0">Send</button>
+        </div>
         </form>
     </section>
     {% else %}
