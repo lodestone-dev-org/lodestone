@@ -99,7 +99,7 @@ body {
 
 #login a {
     color: inherit;
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 /* Server browser styles */
