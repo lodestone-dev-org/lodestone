@@ -410,3 +410,8 @@ def delete_file(server_id):
         flash(f'Deleted {path}')
 
     return browse(server_id, parent(path))
+
+@app.route('/accountsettings', methods=['POST'])
+@login_required
+def accountsettings():
+    return()
