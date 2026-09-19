@@ -23,14 +23,6 @@ Background
 
 Lodestone Identity
 
-The compass/magnetic concept becomes slightly supernatural.
-
-             N
-             |
-        W ---+--- E
-             |
-             S
-
 The center could contain a glowing magnetic stone.
 
 Very faint magnetic-field lines can appear behind sections of the interface, almost like an old cartographer's illustration.

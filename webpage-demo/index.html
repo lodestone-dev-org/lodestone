@@ -1,61 +1,244 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-motion="auto" data-contrast="normal" data-font="normal" data-decor="on">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>lodestone</title>
-  <meta name="description" content="lodestone: a minecraft server to build and play with your friends. this week's theme is harvest.">
-  <meta name="theme-color" content="#2e2322">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;700&family=Fraunces:opsz,wght,SOFT,WONK@9..144,900,0..100,0..1&display=swap">
-
-  <link rel="stylesheet" href="css/current-theme.css">
-  <link rel="stylesheet" href="css/global.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/animations.css">
-  <link rel="stylesheet" href="css/accessibility.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lodestone</title>
+<meta name="description" content="Lodestone is a control panel for Minecraft servers. Haunted Harvest, week 01.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IM+Fell+English+SC&family=Spectral:ital,wght@0,300;0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="style.css">
+<script src="app.js" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#main">skip to content</a>
+<a class="skip" href="#main">Skip to content</a>
+<div class="backdrop" aria-hidden="true"></div>
+<div class="veil" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<canvas id="leaves" aria-hidden="true"></canvas>
 
-  <div class="frame">
-    <!-- Hero: image comes from themes/harvest/assets/hero.jpg.
-         If your image already includes the logo, add class "hero--logo-in-image". -->
-    <header class="hero">
-      <div class="hero__logo">
-        <h1 class="hero__title">lodestone</h1>
-        <p class="hero__tag">week 01 · harvest</p>
-      </div>
-    </header>
-
-    <main id="main" class="column">
-      <h2 class="headline space-md">build with your friends. hang out on the server.</h2>
-      <p class="subhead space-sm">no experience needed. just bring your friends and make something cool.</p>
-
-      <div class="copy space-lg">
-        <p>lodestone is a minecraft server where you and your friends can build, explore and hang out together. like a compass, it always points you back home.</p>
-        <p>every week the whole site gets a new theme. this week it's harvest, so pull up a seat and see what's growing :)</p>
-      </div>
-
-      <!-- Replace href with the live server address -->
-      <a class="btn btn--primary btn--cta space-xl" href="#">enter server!</a>
-
-      <div class="btn-row space-xs">
-        <!-- Replace hrefs with your GitHub repo and download link -->
-        <a class="btn btn--outline" href="https://github.com/">github</a>
-        <a class="btn btn--outline" href="#">download</a>
-      </div>
-    </main>
-
-    <footer class="footer column">
-      <p class="footer__credit">made with &lt;3 by the lodestone team. theme: harvest (week 01).</p>
-      <nav class="footer__links" aria-label="Links">
-        <a href="https://github.com/">github</a>
-        <a href="#">download</a>
-      </nav>
-    </footer>
+<header class="site" id="siteHeader">
+  <div class="wrap bar">
+    <a class="mark" href="#top">Lodestone</a>
+    <nav class="main" aria-label="Sections">
+      <a href="#about">What it is</a>
+      <a href="#features">Features</a>
+      <a href="#theme">This week</a>
+    </nav>
+    <button class="btn" id="a11yOpen" aria-haspopup="dialog">Accessibility</button>
   </div>
+</header>
+
+<main id="main">
+<div class="wrap" id="top">
+
+  <section class="hero" aria-labelledby="title">
+    <svg class="compass" viewBox="0 0 400 400" fill="none" stroke="currentColor" aria-hidden="true">
+      <g class="spin">
+        <circle cx="200" cy="200" r="196" stroke-width="1" opacity=".55"/>
+        <circle cx="200" cy="200" r="150" stroke-width="1" stroke-dasharray="2 10" opacity=".7"/>
+        <circle cx="200" cy="200" r="96" stroke-width="1" opacity=".4"/>
+        <path d="M200 8v56M200 336v56M8 200h56M336 200h56" stroke-width="1.5"/>
+        <path d="M88 88l34 34M312 88l-34 34M88 312l34-34M312 312l-34-34" stroke-width="1" opacity=".6"/>
+        <path d="M200 60l22 118 118 22-118 22-22 118-22-118-118-22 118-22z" stroke-width="1" opacity=".55"/>
+      </g>
+      <g opacity=".5" stroke-width="1">
+        <ellipse cx="200" cy="200" rx="188" ry="120"/><ellipse cx="200" cy="200" rx="120" ry="188"/>
+      </g>
+    </svg>
+    <div class="hero-inner">
+      <span class="eyebrow">Week 01 &middot; Haunted Harvest</span>
+      <h1 id="title">Lodestone</h1>
+      <p class="lede">One place to run your Minecraft servers. Console, files, players, backups and worlds, <em>without the guesswork</em>.</p>
+      <div class="cta">
+        <a class="btn primary" href="#features"><span>See the features</span></a>
+        <button class="btn" data-soon="The repository"><span>GitHub</span></button>
+        <button class="btn" data-soon="The download"><span>Download</span></button>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#about"><i aria-hidden="true"></i>Read on</a>
+  </section>
+
+  <section id="about" aria-labelledby="about-title">
+    <p class="wp"><b>Waypoint 01</b> X 0 &middot; Z 0 &middot; spawn</p>
+    <div class="head">
+      <h2 id="about-title" class="reveal">What Lodestone is</h2>
+      <p class="note reveal">A panel for people who run a server for their friends</p>
+    </div>
+    <div class="about-grid">
+      <p class="lead-line reveal">Everything your server does, in one window, in plain English.</p>
+      <div class="prose reveal">
+        <p>Lodestone is a <strong>control panel for Minecraft servers</strong>, the ones you and your friends play on. Start and stop a server, read the console, edit config files, see who is online, roll back to a backup, all from a browser.</p>
+        <p>It is built for small communities rather than hosting companies: plain language instead of jargon, defaults that already make sense, and nothing important hidden behind a paid tier.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" aria-labelledby="features-title">
+    <p class="wp"><b>Waypoint 02</b> The roadmap, in order</p>
+    <div class="head">
+      <h2 id="features-title" class="reveal">Planned features</h2>
+      <p class="note reveal">Eight things the panel will do</p>
+    </div>
+
+    <div class="cards reveal">
+      <article class="card flag">
+        <span class="n">01</span>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="2.5" y="4" width="19" height="16" rx="2"/><path d="M7 10l3 2.5L7 15M12.5 15.5h4.5"/>
+        </svg>
+        <h3>Live console</h3>
+        <p>Watch the log as it happens and type commands straight into it, No SSH needed</p>
+        <button class="btn" data-soon="Live console" aria-disabled="true"><span>Preview</span></button>
+      </article>
+
+      <article class="card">
+        <span class="n">02</span>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 6.5A1.5 1.5 0 014.5 5h4l2 2.5h7A1.5 1.5 0 0119 9v8.5a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 013 17.5z"/>
+        </svg>
+        <h3>File manager</h3>
+        <p>Edit server.properties, configs and datapacks in the browser. A copy is kept before every save.</p>
+        <button class="btn" data-soon="File manager" aria-disabled="true"><span>Preview</span></button>
+      </article>
+
+      <article class="card">
+        <span class="n">03</span>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="9" cy="9" r="3"/><path d="M3.5 19a5.5 5.5 0 0111 0"/><circle cx="17" cy="10" r="2.2"/><path d="M15.2 19a4.5 4.5 0 016.3-3.4"/>
+        </svg>
+        <h3>Players</h3>
+        <p>See who is online, hand out operator rights, kick or ban someone without digging through the console.</p>
+        <button class="btn" data-soon="Players" aria-disabled="true"><span>Preview</span></button>
+      </article>
+
+      <article class="card">
+        <span class="n">04</span>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20 12a8 8 0 11-2.4-5.7"/><path d="M20 4.2v4h-4"/>
+        </svg>
+        <h3>Backups and restore</h3>
+        <p>Snapshots on a schedule, and a way back to yesterday when a build goes wrong.</p>
+        <button class="btn" data-soon="Backups" aria-disabled="true"><span>Preview</span></button>
+      </article>
+
+      <article class="card">
+        <span class="n">05</span>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 5h6v2.8a2 2 0 104 0V5h4v6h-2.8a2 2 0 100 4H19v4h-6v-2.8a2 2 0 10-4 0V19H5z"/>
+        </svg>
+        <h3>Mods and modpacks</h3>
+        <p>Install a pack, check the versions line up, and find the mod that stopped the server booting.</p>
+        <button class="btn" data-soon="Mods and modpacks" aria-disabled="true"><span>Preview</span></button>
+      </article>
+
+      <article class="card">
+        <span class="n">06</span>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 6.5l6-2.5 6 2.5 6-2.5v13L15 19.5 9 17l-6 2.5z"/><path d="M9 4v13M15 6.5v13"/>
+        </svg>
+        <h3>World map</h3>
+        <p>A view from above with player positions, waypoints and the places your community cares about.</p>
+        <button class="btn" data-soon="World map" aria-disabled="true"><span>Preview</span></button>
+      </article>
+
+      <article class="card">
+        <span class="n">07</span>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="8.5"/><path d="M12 7.3V12l3.2 2"/>
+        </svg>
+        <h3>Scheduled tasks</h3>
+        <p>Restart at 4am, announce an event, run a backup before the weekend. Set it once.</p>
+        <button class="btn" data-soon="Scheduled tasks" aria-disabled="true"><span>Preview</span></button>
+      </article>
+
+      <article class="card">
+        <span class="n">08</span>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="5.5" rx="1.5"/><rect x="3" y="13.5" width="18" height="5.5" rx="1.5"/><path d="M7 6.7h.01M7 16.2h.01"/>
+        </svg>
+        <h3>Several servers</h3>
+        <p>Survival, creative and modded side by side, each with its own status and history.</p>
+        <button class="btn" data-soon="Several servers" aria-disabled="true"><span>Preview</span></button>
+      </article>
+    </div>
+  </section>
+  <section id="theme" aria-labelledby="theme-title">
+    <p class="wp"><b>Waypoint 03</b> The theme, in order</p>
+    <div class="head">
+      <h2 id="theme-title" class="reveal">Haunted Harvest</h2>
+      <p class="note reveal">A spooky theme for week 01</p>
+    </div>
+    <div class="about-grid">
+      <p class="lead-line reveal">A theme for the first week of the project, with a few surprises.</p>
+      <div class="prose reveal">
+        <p>The first week of Lodestone is a Halloween theme, with a few surprises hidden in the code. The compass spins, leaves fall, and the background is haunted. Check the source code for more.</p>
+        <p>There are also some accessibility features: a high contrast mode, a motion reduction mode, and a font size adjustment. These can be toggled in the accessibility dialog.</p>
+      </div>
+    </div>
+    <p class="wp"><b>Waypoint 04</b>Palette: the nine colours used:</p>
+    <div class="swatches">
+      <div class="sw"><i style="background:#120F0D"></i><span><b>Midnight soil</b>#120F0D</span></div>
+      <div class="sw"><i style="background:#211714"></i><span><b>Charred brown</b>#211714</span></div>
+      <div class="sw"><i style="background:#3A241D"></i><span><b>Dark wood</b>#3A241D</span></div>
+      <div class="sw"><i style="background:#6E3026"></i><span><b>Dark rust</b>#6E3026</span></div>
+      <div class="sw"><i style="background:#B85C27"></i><span><b>Pumpkin orange</b>#B85C27</span></div>
+      <div class="sw"><i style="background:#D58A35"></i><span><b>Lantern gold</b>#D58A35</span></div>
+      <div class="sw"><i style="background:#D6C19A"></i><span><b>Old parchment</b>#D6C19A</span></div>
+      <div class="sw"><i style="background:#4B523B"></i><span><b>Dead moss</b>#4B523B</span></div>
+      <div class="sw"><i style="background:#6E6570"></i><span><b>Ghostly purple-gray</b>#6E6570</span></div>
+    </div>
+  </section>
+
+</div>
+</main>
+<footer class="site">
+  <div class="wrap">
+    <p class="copyright">&copy; 2024 Lodestone. All rights reserved.</p>
+    <nav class="footer-nav" aria-label="Footer">
+      <a href="#top">Back to top</a>
+      <a href="#about">About</a>
+      <a href="#features">Features</a>
+      <a href="#theme">Theme</a>
+    </nav>
+  </div>
+</footer>
+
+<dialog class="a11y" id="a11y" aria-labelledby="a11y-title" aria-describedby="a11y-desc">
+  <div class="wrap">
+    <h2 id="a11y-title">Accessibility</h2>
+    <p id="a11y-desc">Adjust the settings below to improve your experience.</p>
+    <form method="dialog">
+      <fieldset>
+        <legend>Motion</legend>
+        <label><input type="radio" name="motion" value="auto" checked> Auto</label>
+        <label><input type="radio" name="motion" value="reduce"> Reduce</label>
+        <label><input type="radio" name="motion" value="none"> None</label>
+      </fieldset>
+      <fieldset>
+        <legend>Contrast</legend>
+        <label><input type="radio" name="contrast" value="normal" checked> Normal</label>
+        <label><input type="radio" name="contrast" value="high"> High</label>
+      </fieldset>
+      <fieldset>
+        <legend>Font size</legend>
+        <label><input type="radio" name="font" value="normal" checked> Normal</label>
+        <label><input type="radio" name="font" value="large"> Large</label>
+      </fieldset>
+      <fieldset>
+        <legend>Decoration</legend>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" name="decor" value="off"><span>Hide leaves and grain</span></label>
+        </div>
+        <p class="hint">Your choices are kept on this device.</p>
+      </fieldset>
+      <div class="a11y-foot">
+        <button class="btn" type="button" id="a11yReset"><span>Reset</span></button>
+        <button class="btn primary" value="close"><span>Done</span></button>
+      </div>
+    </form>
+  </div>
+</dialog>
 </body>
 </html>
