@@ -66,6 +66,10 @@
 }
 
 @media (prefers-reduced-motion:reduce) {
+  :root:not([data-motion="full"]) {
+    scroll-behavior: auto!important;
+  }
+
   :root:not([data-motion="full"]) * {
     animation: none!important;
     transition: none!important;
