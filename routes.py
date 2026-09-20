@@ -501,6 +501,7 @@ def accountsettings():
     if request.method == 'POST':
         username = request.form['username'].strip()
         password = request.form['password']
+        changing_password = bool(password.strip())
 
         if not username:
             flash('Username is required')
@@ -510,7 +511,7 @@ def accountsettings():
         try:
             db.execute('UPDATE users SET username = ? WHERE id = ?',
                        (username, session['user_id']))
-            if password:
+            if changing_password:
                 db.execute('UPDATE users SET password_hash = ? WHERE id = ?',
                            (generate_password_hash(password), session['user_id']))
             db.commit()
@@ -519,7 +520,7 @@ def accountsettings():
             return render_template('account_settings.html')
 
         session['username'] = username
-        flash('Settings updated')
+        flash('Password changed' if changing_password else 'Settings updated')
         return redirect(url_for('accountsettings'))
 
     return render_template('account_settings.html')
