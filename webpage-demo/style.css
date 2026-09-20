@@ -228,6 +228,7 @@ header.site.lifted {
   text-decoration: none;
 
   opacity: 0;
+  visibility: hidden;
   transform: translateY(-.35rem);
   transition: opacity .45s, transform .45s;
   pointer-events: none;
@@ -235,6 +236,7 @@ header.site.lifted {
 
 header.site.lifted .mark {
   opacity: 1;
+  visibility: visible;
   transform: none;
   pointer-events: auto;
 }
