@@ -378,3 +378,107 @@ body {
 .files li .delete {
     margin-left: auto;
 }
+/* account settings page styles */
+#account-settings {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+#account-settings main {
+    width: 100%;
+    max-width: 340px;
+    padding: 2rem;
+    border: 1px solid currentColor;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+#account-settings h1 {
+    margin: 0 0 1.5rem;
+    text-align: center;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+#account-settings label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+#account-settings input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid currentColor;
+    border-radius: 6px;
+    box-sizing: border-box;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+#account-settings input:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+#account-settings button {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    margin-top: 0.5rem;
+    border: 1px solid currentColor;
+    border-radius: 6px;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+#account-settings button:hover {
+    transform: translateY(-1px);
+}
+
+#account-settings button:active {
+    transform: translateY(0);
+}
+
+#account-settings .flash {
+    margin: 0 0 1rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid currentColor;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+#account-settings .theme-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid currentColor;
+}
+
+#account-settings .theme-row label {
+    margin: 0;
+}
+
+#account-settings .theme-row input {
+    width: auto;
+    margin: 0;
+    accent-color: currentColor;
+}
