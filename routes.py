@@ -5,7 +5,8 @@ import sqlite3
 
 from docker.errors import DockerException
 from flask import (
-    Response, abort, flash, redirect, render_template, request, session, url_for
+    Response, abort, flash, redirect, render_template, request, send_file,
+    session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
@@ -271,6 +272,89 @@ def delete_server(server_id):
     db.commit()
     flash(f"Removed {server['name']}. Its world files are still on disk.")
     return redirect(url_for('index'))
+
+
+def memory_value(raw):
+    """Turn what the settings form sends into a heap size the backend accepts."""
+    value = raw.strip()
+    if value.isdigit():
+        value += 'M'
+    docker_backend.heap_bytes(value)
+    return value
+
+
+@app.route('/server/<int:server_id>/settings')
+@login_required
+def server_settings(server_id):
+    server = owned(server_id)
+    if server is None:
+        abort(404)
+    return render_template('server_settings.html', server=server)
+
+
+@app.route('/server/<int:server_id>/settings', methods=['POST'])
+@login_required
+def update_server_settings(server_id):
+    if owned(server_id) is None:
+        abort(404)
+
+    back = redirect(url_for('server_settings', server_id=server_id))
+    name = request.form['name'].strip()
+    if not name:
+        flash('Server name is required')
+        return back
+
+    try:
+        memory = memory_value(request.form['memory'])
+    except ValueError as e:
+        flash(str(e))
+        return back
+
+    db = get_db()
+    db.execute('UPDATE servers SET name = ?, memory = ? WHERE id = ?',
+               (name, memory, server_id))
+    db.commit()
+    flash(f'Saved. The heap change only reaches {name} once its container is rebuilt.')
+    return back
+
+
+@app.route('/server/<int:server_id>/backups')
+@login_required
+def server_backups(server_id):
+    server = owned(server_id)
+    if server is None:
+        abort(404)
+    return render_template('server_backup.html', server=server,
+                           backups=docker_backend.backups(server_id))
+
+
+@app.route('/server/<int:server_id>/backups/<backup_id>')
+@login_required
+def download_backup(server_id, backup_id):
+    if owned(server_id) is None:
+        abort(404)
+    try:
+        path = docker_backend.backup_path(server_id, backup_id)
+    except ValueError:
+        abort(404)
+    return send_file(path, as_attachment=True)
+
+
+@app.route('/server/<int:server_id>/backups/delete', methods=['POST'])
+@login_required
+def delete_backup(server_id):
+    if owned(server_id) is None:
+        abort(404)
+
+    backup_id = request.form['backup_id']
+    try:
+        docker_backend.delete_backup(server_id, backup_id)
+    except (ValueError, OSError) as e:
+        flash(str(e))
+    else:
+        flash(f'Deleted {backup_id}')
+
+    return redirect(url_for('server_backups', server_id=server_id))
 
 
 def parent(path):

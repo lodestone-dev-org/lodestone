@@ -16,6 +16,7 @@ from requests.exceptions import RequestException
 
 IMAGE = os.environ.get('LODESTONE_MC_IMAGE')  # set this to pin one image for every server
 DATA_ROOT = os.environ.get('LODESTONE_DATA', os.path.abspath('servers'))
+BACKUP_ROOT = os.environ.get('LODESTONE_BACKUPS', os.path.abspath('backups'))
 LABEL = 'lodestone.server'
 
 # MEMORY sets the JVM heap, mem_limit caps the container. They are not the same
@@ -49,6 +50,40 @@ def data_dir(server_id):
     path = os.path.join(DATA_ROOT, str(server_id))
     os.makedirs(path, exist_ok=True)
     return path
+
+
+def backup_dir(server_id):
+    path = os.path.join(BACKUP_ROOT, str(server_id))
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
+def backup_path(server_id, backup_id):
+    name = os.path.basename(backup_id)
+    if not name.endswith('.tar.gz'):
+        raise ValueError(f'{backup_id} is not a backup archive')
+    return os.path.join(backup_dir(server_id), name)
+
+
+def backups(server_id):
+    found = []
+    for name in os.listdir(backup_dir(server_id)):
+        if not name.endswith('.tar.gz'):
+            continue
+        stat = os.stat(os.path.join(backup_dir(server_id), name))
+        found.append({
+            'id': name,
+            'name': name,
+            'size': stat.st_size,
+            'created_at': time.strftime('%Y-%m-%d %H:%M',
+                                        time.localtime(stat.st_mtime)),
+        })
+    found.sort(key=lambda b: b['name'], reverse=True)
+    return found
+
+
+def delete_backup(server_id, backup_id):
+    os.remove(backup_path(server_id, backup_id))
 
 
 def get_container(server_id):
